@@ -13,9 +13,13 @@ spec:
       {{- include "safe-settings.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      checksum/config: {{ include (print $.Template.BasePath "/deployment-configmap.yaml") . | sha256sum }}
+      {{- if .Values.githubAppCredentials }}
+      checksum/credentials: {{ include (print $.Template.BasePath "/credential-secret.yaml") . | sha256sum }}
       {{- end }}
       labels:
         {{- include "safe-settings.selectorLabels" . | nindent 8 }}
