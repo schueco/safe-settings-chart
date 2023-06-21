@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "safe-settings.fullname" . }}
+  labels:
+    {{- include "safe-settings.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "safe-settings.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "safe-settings.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "safe-settings.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "safe-settings.fullname" . }}-deployment-settings
+      {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+          {{- with .Values.config }}
+            - name: GH_ORG
+              value: "{{ .githubOrg }}"
+            - name: LOG_LEVEL
+              value: "{{ .logLevel }}"
+            - name: ENABLE_PR_COMMENT
+              value: "{{ .enablePrComment }}"
+            - name: CRON
+              value: "{{ .cron }}"
+            - name: ADMIN_REPO
+              value: "{{ .adminRepo }}"
+            - name: SETTINGS_FILE_PATH
+              value: "{{ .settingsFilePath }}"
+          {{- end }}
+          {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or (or .Values.githubAppCredentialSecretName .Values.envFrom) .Values.githubAppCredentials }}
+          envFrom:
+          {{- if .Values.githubAppCredentials }}
+            - secretRef:
+                name: {{ include "safe-settings.fullname" . }}-app-credentials
+          {{- end }}
+          {{- with .Values.githubAppCredentialSecretName }}
+            - secretRef:
+                name: {{ . }}
+          {{- end}}
+          {{- with .Values.envFrom }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- end }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: "/opt/safe-settings/deployment-settings.yml"
+              subPath: "deployment-settings.yml"
+          {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /probot
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /probot
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

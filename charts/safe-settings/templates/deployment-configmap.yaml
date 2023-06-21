@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "safe-settings.fullname" . }}-deployment-settings
+data:
+  "deployment-settings.yml": |
+    {{- .Values.config.deploymentSettings | toYaml | nindent 4 }}

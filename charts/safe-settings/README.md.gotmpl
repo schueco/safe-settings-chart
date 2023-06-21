@@ -1,0 +1,26 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+## Documentation
+
+For full documentation please checkout [safe-settings](https://github.com/github/safe-settings).
+
+## Installing the Chart
+
+```bash
+helm upgrade --install --namespace safe-settings --create-namespace \
+  safe-settings oci://ghcr.io/schueco/{{ template "chart.name" . }} \
+  --version v{{ template "chart.version" . }} \
+  --set githubAppCredentials.appId=${APP_ID} \
+  --set githubAppCredentials.privateKey=${PRIVATE_KEY} \
+  --set githubAppCredentials.webhookSecret=${WEBHOOK_SECRET}
+  --wait
+```
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

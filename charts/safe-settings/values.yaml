@@ -1,0 +1,154 @@
+# Default values for safe-settings.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/github/safe-settings
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag.
+  # @default -- The chart's `appVersion`
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+config:
+  # -- (string) The github organization to be configured by safe-settings.
+  githubOrg: ""
+  # -- Specifies whether changes should be added as PR comments.
+  enablePrComment: false
+  # -- Sets the logging level.
+  logLevel: info
+  # -- Specifies a regular schedule at which to run `safe-settings`.
+  # This is based on [node-cron](https://www.npmjs.com/package/node-cron).
+  cron: "* * * * *"
+  # -- Specifies the repo where the `safe-settings` files are located.
+  adminRepo: "admin"
+  # -- Specifies the org-level settings file in the `adminRepo`'s `.github/` folder
+  settingsFilePath: "settings.yml"
+  # -- Specifies deployment settings, e.g. to [restrict `safe-settings` to specific repos](https://github.com/github/safe-settings#restricting-safe-settings-to-specific-repos).
+  deploymentSettings: {}
+    # restrictedRepos:
+    #   # You can exclude certain repos from safe-settings processing
+    #   #  If no file is specified, then the following repositories - 'admin', '.github', 'safe-settings' are exempted by default
+    #   exclude: ['^admin$', '^\.github$', '^safe-settings$', '.*-test']
+    #   # Alternatively you can only include certain repos
+    #   include: ['^test$']
+    # configvalidators:
+    #   - plugin: collaborators
+    #     error: |
+    #       `Admin cannot be assigned to collaborators`
+    #     script: |
+    #       console.log(`baseConfig ${JSON.stringify(baseconfig)}`)
+    #       return baseconfig.permission != 'admin'
+    # overridevalidators:
+    #   - plugin: branches
+    #     error: |
+    #       `Branch protection required_approving_review_count cannot be overidden to a lower value`
+    #     script: |
+    #       console.log(`baseConfig ${JSON.stringify(baseconfig)}`)
+    #       console.log(`overrideConfig ${JSON.stringify(overrideconfig)}`)
+    #       if (baseconfig.protection.required_pull_request_reviews.required_approving_review_count && overrideconfig.protection.required_pull_request_reviews.required_approving_review_count ) {
+    #         return overrideconfig.protection.required_pull_request_reviews.required_approving_review_count >= baseconfig.protection.required_pull_request_reviews.required_approving_review_count
+    #       }
+    #       return true
+    #   - plugin: labels
+    #     error: |
+    #       Some error
+    #     script: |
+    #       return true
+
+# -- Set the GitHub app's credentials using
+# `githubAppCredentials.appId`, `githubAppCredentials.privateKey`, and `githubAppCredentials.webhookSecret`.
+githubAppCredentials: {}
+  # appId: ""
+  # privateKey: ""
+  # webhookSecret: ""
+
+# -- Reference an existing secret that contains the GitHub app's
+# APP_ID, PRIVATE_KEY, and WEBHOOK_SECRET
+githubAppCredentialSecretName: ""
+
+# -- Additional environment variables for the pod.
+env: []
+# - name: NODE_ENV
+#   value: develop
+# -- Additional environment variables mounted from configmaps or secrets.
+envFrom: []
+# - secretRef:
+#     name: my-secret
+# -- Additional volumes for the pod.
+extraVolumes: {}
+  # -- Additional volumeMounts for the pod.
+extraVolumeMounts: {}
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Additional annotations for the pod.
+podAnnotations: {}
+# -- SecurityContext for the pod.
+podSecurityContext: {}
+  # fsGroup: 2000
+# -- SecurityContext for the container.
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
