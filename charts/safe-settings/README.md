@@ -42,7 +42,7 @@ helm upgrade --install --namespace safe-settings --create-namespace \
 | extraVolumes | object | `{}` | Additional volumes for the pod. |
 | fullnameOverride | string | `""` |  |
 | githubAppCredentialSecretName | string | `""` | Reference an existing secret that contains the GitHub app's APP_ID, PRIVATE_KEY, and WEBHOOK_SECRET |
-| githubAppCredentials | object | `{}` | Set the Github app's credentials using `githubAppCredentials.appId`, `githubAppCredentials.privateKey`, and `githubAppCredentials.webhookSecret`. |
+| githubAppCredentials | object | `{}` | Set the GitHub app's credentials using `githubAppCredentials.appId`, `githubAppCredentials.privateKey`, and `githubAppCredentials.webhookSecret`. |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/github/safe-settings"` |  |
 | image.tag | string | The chart's `appVersion` | Overrides the image tag. |
