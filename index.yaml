@@ -3,6 +3,16 @@ entries:
   safe-settings:
   - apiVersion: v2
     appVersion: 2.0.24-rc.4
+    created: "2023-06-23T08:21:25.922756283Z"
+    description: A Helm chart to deploy `safe-settings`
+    digest: 73eaabc15c7a0ecb9a1902fe37905cb72ba5ef96ba1daa86c02baf7570338295
+    name: safe-settings
+    type: application
+    urls:
+    - https://github.com/schueco/safe-settings-chart/releases/download/safe-settings-1.0.0/safe-settings-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v2
+    appVersion: 2.0.24-rc.4
     created: "2023-06-22T13:04:22.66477322Z"
     description: A Helm chart to deploy `safe-settings`
     digest: cb3424cb497127709790eed7eb10ec95430d56ae1feee2f9a6c89844fd49eacf
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/schueco/safe-settings-chart/releases/download/safe-settings-0.1.0/safe-settings-0.1.0.tgz
     version: 0.1.0
-generated: "2023-06-22T13:04:22.66477842Z"
+generated: "2023-06-23T08:21:25.922763383Z"
