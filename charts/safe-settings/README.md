@@ -1,8 +1,8 @@
 # safe-settings
 
-A Helm chart for Kubernetes
+A Helm chart to deploy `safe-settings`
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.24-rc.4](https://img.shields.io/badge/AppVersion-2.0.24--rc.4-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.24-rc.4](https://img.shields.io/badge/AppVersion-2.0.24--rc.4-informational?style=flat-square)
 
 ## Documentation
 
@@ -13,7 +13,7 @@ For full documentation please checkout [safe-settings](https://github.com/github
 ```bash
 helm upgrade --install --namespace safe-settings --create-namespace \
   safe-settings oci://ghcr.io/schueco/safe-settings \
-  --version v0.1.0 \
+  --version v1.0.0 \
   --set githubAppCredentials.appId=${APP_ID} \
   --set githubAppCredentials.privateKey=${PRIVATE_KEY} \
   --set githubAppCredentials.webhookSecret=${WEBHOOK_SECRET}
