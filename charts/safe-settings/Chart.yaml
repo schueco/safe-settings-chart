@@ -2,5 +2,5 @@ apiVersion: v2
 name: safe-settings
 description: A Helm chart to deploy `safe-settings`
 type: application
-version: 1.0.0
-appVersion: "2.0.24-rc.4"
+version: 1.0.1
+appVersion: "2.0.25"
